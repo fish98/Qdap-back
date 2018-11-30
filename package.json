@@ -12,6 +12,7 @@
     "isomorphic-fetch": "^2.2.1",
     "koa": "^2.6.2",
     "koa-body": "^4.0.4",
+    "koa-router": "^7.4.0",
     "mysql": "^2.16.0"
   }
 }
