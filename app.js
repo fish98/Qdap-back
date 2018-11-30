@@ -2,7 +2,7 @@ const Koa = require('koa');
 const koaBody = require('koa-body')
 const Router = require('koa-router')
 const koaCors = require('@koa/cors')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 
 // config
 
@@ -23,8 +23,7 @@ const table = "test"
 
 let connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-
+    user: 'root'
 })
 
 connection.connect(function(err){
@@ -34,17 +33,17 @@ connection.connect(function(err){
         }
     })
 
-const findData = (id) => {
-    connection.query(`select * from ${table} where id = ?`, id, (err, result, field) => {
-        if (err) throw err
-        console.log("result:", result)
-        })
-    }
+// const findData = (id) => {
+//     connection.query(`select * from ${table} where id = ?`, id, (err, result) => {
+//         if (err) throw err
+//         return result
+//         })
+//     }
 
 const insertData = (data) => {
-    connection.query(`INSERT INTO ${table} SET ?`, data, (err, result, field) => {
-            if (err) throw err
-            console.log(`result:`)
+    connection.query(`INSERT INTO ${table} SET ?`, data, (err) => {
+        if (err) throw err
+        console.log(`insert data ${ctx.request.body}`)
         })
     }
 
@@ -53,8 +52,15 @@ const insertData = (data) => {
 const app = new Koa()
 const router = new Router()
 
-router.get('/all', (ctx) => {
-    ctx.body = ""
+router.get('/all', async(ctx, next) => {
+    var data
+    connection.query(`select * from ${table}`, (err, result) => {
+        if (err) throw err
+        console.log("query all data")
+        data = result
+    })
+    console.log(data)
+    // ctx.body = result
 })
 
 // ready to finish feature!
@@ -62,12 +68,11 @@ router.get('/all', (ctx) => {
 // router.get('/status', (ctx, next) => {
 //     ctx.body = "Hi TTfish"
 //     console.log(ctx.request.body)
-// })
+// }
 
 router.post('/new', (ctx) => {
     ctx.body = "Success"
     insertData(ctx.request.body)
-    console.log(`insert data ${ctx.request.body}`)
 })
 
 app.use(koaBody())
