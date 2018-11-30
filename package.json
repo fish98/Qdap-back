@@ -1,0 +1,24 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^2.2.2",
+    "es6-promise": "^4.2.5",
+    "fetch": "^1.1.0",
+    "install": "^0.12.2",
+    "isomorphic-fetch": "^2.2.1",
+    "koa": "^2.6.2",
+    "koa-body": "^4.0.4",
+    "mysql": "^2.16.0",
+    "node-fetch": "^2.3.0",
+    "npm": "^6.4.1",
+    "whatwg-fetch": "^3.0.0"
+  }
+}
