@@ -1,10 +1,18 @@
+'use strict'
+
 const Koa = require('koa');
 const koaBody = require('koa-body')
 const Router = require('koa-router')
 const koaCors = require('@koa/cors')
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')
+
+const config = require('./config')
+
+console.log(config)
 
 // config
+
+async function main(){
 
 const fish = {
     "id": "fish",
@@ -21,26 +29,23 @@ const table = "test"
 
 // SQL
 
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root'
-})
+const connection = await mysql.createConnection(config)
 
-connection.connect(function(err){
-        if (err) {
-    console.error('error connecting: ' + err.stack)
-    return
-        }
-    })
+// connection.connect(function(err){
+//         if (err) {
+//     console.error('error connecting: ' + err.stack)
+//     return
+//         }
+//     })
 
-// const findData = (id) => {
+// async function findData (id) {
 //     connection.query(`select * from ${table} where id = ?`, id, (err, result) => {
 //         if (err) throw err
 //         return result
 //         })
 //     }
 
-const insertData = (data) => {
+async function insertData (data) {
     connection.query(`INSERT INTO ${table} SET ?`, data, (err) => {
         if (err) throw err
         console.log(`insert data ${ctx.request.body}`)
@@ -52,14 +57,32 @@ const insertData = (data) => {
 const app = new Koa()
 const router = new Router()
 
+// test here //
+
+async function ttfish(){
+    
+    const [rows, fields] = await connection.query(`select * from ${table}`);
+    console.log(rows);
+    }
+
+// connection.then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
+
+ttfish()
+
+// mysql.createConnection({
+//         host: 'localhost',
+//         user: 'root',
+//         password: '123456',
+//         database: 'ttfish'
+// }).then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
+
+
+//
+
 router.get('/all', async(ctx, next) => {
-    var data
-    connection.query(`select * from ${table}`, (err, result) => {
-        if (err) throw err
+    let [fish, field] = connection.then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
         console.log("query all data")
-        data = result
-    })
-    console.log(data)
+        console.log(fish)
     // ctx.body = result
 })
 
@@ -83,3 +106,6 @@ app.use(koaCors())
 app.listen(8102)
 
 console.log("Start listening port 8102")
+}
+
+main()
