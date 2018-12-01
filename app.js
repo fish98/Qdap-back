@@ -3,14 +3,10 @@
 const Koa = require('koa');
 const koaBody = require('koa-body')
 const Router = require('koa-router')
-const koaCors = require('@koa/cors')
+const koaCors = require('koa2-cors')
 const mysql = require('mysql2/promise')
 
 const config = require('./config')
-
-console.log(config)
-
-// config
 
 async function main(){
 
@@ -24,6 +20,13 @@ const fish = {
     "remard": "ttfish",
     "image": "xxx.jpg" 
 }
+
+const koaOptions = {
+    origin: true,
+    credentials: true
+  }
+
+// table
 
 const table = "test"
 
@@ -59,31 +62,13 @@ const router = new Router()
 
 // test here //
 
-async function ttfish(){
-    
-    const [rows, fields] = await connection.query(`select * from ${table}`);
-    console.log(rows);
-    }
-
-// connection.then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
-
-ttfish()
-
-// mysql.createConnection({
-//         host: 'localhost',
-//         user: 'root',
-//         password: '123456',
-//         database: 'ttfish'
-// }).then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
-
-
 //
 
 router.get('/all', async(ctx, next) => {
-    let [fish, field] = connection.then(connect => connect.query(`select * from ${table}`)).then(([rows, fields]) => console.log(rows))
-        console.log("query all data")
-        console.log(fish)
-    // ctx.body = result
+    const rows = await connection.query(`select * from ${table}`)
+    let result = rows[0]
+    console.log("query all data")
+    ctx.body = result
 })
 
 // ready to finish feature!
@@ -96,6 +81,7 @@ router.get('/all', async(ctx, next) => {
 router.post('/new', (ctx) => {
     ctx.body = "Success"
     insertData(ctx.request.body)
+    console.log("insert data success")
 })
 
 app.use(koaBody())
