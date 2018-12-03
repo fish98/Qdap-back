@@ -10,16 +10,16 @@ const config = require('./config')
 
 async function main(){
 
-const fish = {
-    "id": "fish",
-    "package": "Computer", 
-    "place": "Bird",
-    "deadline": 3,
-    "reward": 5000,
-    "detail": "hahahahahahahaha",
-    "remard": "ttfish",
-    "image": "xxx.jpg" 
-}
+// const fish = {
+//     "id": "fish",
+//     "package": "Computer", 
+//     "place": "Bird",
+//     "deadline": 3,
+//     "reward": 5000,
+//     "detail": "hahahahahahahaha",
+//     "remark": "ttfish",
+//     "image": "xxx.jpg" 
+// }
 
 const koaOptions = {
     origin: '*',
@@ -82,7 +82,7 @@ router.get('/all', async(ctx, next) => {
 
 router.post('/new', (ctx) => {
     ctx.body = "Success"
-    insertData(ctx.request.body)
+    insertData(JSON.parse(ctx.request.body))
     console.log("insert data success")
 })
 
