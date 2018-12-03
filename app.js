@@ -22,8 +22,10 @@ const fish = {
 }
 
 const koaOptions = {
-    origin: true,
-    credentials: true
+    origin: '*',
+    credentials: true,
+    allowMethods: ['GET', 'POST', 'DELETE'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept']
   }
 
 // table
@@ -84,14 +86,16 @@ router.post('/new', (ctx) => {
     console.log("insert data success")
 })
 
+app.use(koaCors(koaOptions))
 app.use(koaBody())
 app.use(router.routes())
 app.use(router.allowedMethods())
-app.use(koaCors())
+
 
 app.listen(8102)
 
 console.log("Start listening port 8102")
+
 }
 
 main()
